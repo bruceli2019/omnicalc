@@ -7,36 +7,68 @@ class StatsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer"
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer"
+    @count = @numbers.count
 
-    @minimum = "Replace this string with your answer"
+    @minimum = @numbers.min
 
-    @maximum = "Replace this string with your answer"
+    @maximum = @numbers.max
 
-    @range = "Replace this string with your answer"
+    @range = @maximum - @minimum
+    
+    # we declare the default value of the median to be nil, we don't know what it is
+    median = nil
+    
+    # if the number of observations is even
+    if (@count % 2 == 0)
+      # we need to find the middle 2 numbers
+      left_index = @count / 2 - 1
+      right_index = @count / 2
+      median = (@sorted_numbers[left_index] + @sorted_numbers[right_index]) / 2
+    else # if it's not odd, it's even
+      median_index= (@count - 1) / 2 # recall the index starts at 0!
+      median = @sorted_numbers[median_index]
+    end
 
-    # Median
-    # ======
+    @median = median
 
-    @median = "Replace this string with your answer"
+    @sum = @numbers.sum
 
-    @sum = "Replace this string with your answer"
+    @mean = @sum / @count
 
-    @mean = "Replace this string with your answer"
+    # create an empty array to hold square differences
+    array_of_squared_diff = []
+    
+    @numbers.each do |num_1|
+      # square the difference
+      new_sq_diff = (num_1 - @mean) ** 2
+      # add into array
+      array_of_squared_diff.push(new_sq_diff)
+    end
+    
+    # also convert into a float to avoid integer division
+    sum_of_sq_diff = array_of_squared_diff.sum.to_f
 
-    # Variance
-    # ========
+    @variance = sum_of_sq_diff / @count
 
-    @variance = "Replace this string with your answer"
+    @standard_deviation = Math.sqrt(@variance)
 
-    @standard_deviation = "Replace this string with your answer"
+    max_count = 0
+    mode = nil
+    
+    @numbers.each do |uniq_val|
+      #counts number of times the uniq_val shows up in array
+      new_max_count = @numbers.count(uniq_val)
+      
+      #if the maximum count of the currently evaluated value is greater than the previously stored max count, we update the max count and set the mode to be that value
+      if max_count < new_max_count
+        max_count = new_max_count
+        mode = uniq_val
+      end
+    end
 
-    # Mode
-    # ====
-
-    @mode = "Replace this string with your answer"
+    @mode = mode
 
     # ================================================================================
     # Your code goes above.
