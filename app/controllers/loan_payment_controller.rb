@@ -11,12 +11,17 @@ class LoanPaymentController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer"
-
-    # ================================================================================
-    # Your code goes above.
-    # ================================================================================
-
+    # we calculate the annual payments first, convert all information to floats and ints, then calculate monthly payments
+    
+    apr_dec = @apr / 100 #convert into a decimal
+    
+    monthly_rate = apr_dec / 12
+    
+    #source: https://en.wikipedia.org/wiki/Mortgage_calculator#Monthly_payment_formula
+    monthly_payment = (monthly_rate * @principal) / (1 - (1 + monthly_rate)**(-@years * 12))
+    
+    @monthly_payment = monthly_payment
+    
     render("loan_payment_templates/loan_payment.html.erb")
   end
 

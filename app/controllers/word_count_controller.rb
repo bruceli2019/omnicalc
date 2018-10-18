@@ -9,17 +9,33 @@ class WordCountController < ApplicationController
     # The special word the user input is in the string @special_word.
     # ================================================================================
 
-    @word_count = "Replace this string with your answer"
+    #turn string into array so we can count it
+    array_words = @text.split
+    @word_count = array_words.count
 
-    @character_count_with_spaces = "Replace this string with your answer"
+    @character_count_with_spaces = @text.length
 
-    @character_count_without_spaces = "Replace this string with your answer"
+    #remove spaces
+    text_nosp = @text.gsub(/\s+/,"")
+    @character_count_without_spaces = text_nosp.length
+    
+    # need to clean the string of everything except whitespace and alphanumerics (i.e. remove punctuation), and make everything lowercase
+    clean_text = @text.gsub(/[^a-z0-9\s]/i, "").downcase
+    
+    # turn string into array
+    clean_array = clean_text.split
+    
+    # iterate over array and count number of special words
+    num_spec_word = 0
+    clean_array.each do |new_word|
+      #need to get rid of the \n on special_word
+      if @special_word == new_word
+        num_spec_word = num_spec_word + 1
+      end
+    end
 
-    @occurrences = "Replace this string with your answer"
+    @occurrences = num_spec_word
 
-    # ================================================================================
-    # Your code goes above.
-    # ================================================================================
 
     render("word_count_templates/word_count.html.erb")
   end
