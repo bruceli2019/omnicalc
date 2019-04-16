@@ -9,7 +9,27 @@ class ColorizeController < ApplicationController
     # ================================================================================
 
     @original_image_url = params.fetch("image_url")
-    @colorized_image_url = "Replace this string with your answer"
+    
+    #holds image to be tagged 
+    input = {image: @original_image_url}
+    
+    #algorithima object that processes data, with my API key
+    client = Algorithmia.client(ENV.fetch('ALGORITHMIA_KEY'))
+    
+    #actual algorithim to run
+    algo = client.algo('deeplearning/ColorfulImageColorization/1.1.13')
+    
+    # result, apply the algorithm to the original image
+    result = algo.pipe(input).result
+    
+    new_link = result["output"]
+    
+    #Note that this result is in a hash form!! -- we need to extract the URL
+    #key is "output", and we need to add https://algorithmia.com/v1/data/ at the beginning
+    
+    final_url = "https://algorithmia.com/v1/data/" + new_link[7..-1]
+    
+    @colorized_image_url = final_url
 
     # ================================================================================
     # Your code goes above.

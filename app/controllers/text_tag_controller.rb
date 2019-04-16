@@ -6,7 +6,19 @@ class TextTagController < ApplicationController
     # Your code goes below.
     # ================================================================================
 
-    @tags = "Replace this string with your answer"
+    # holds text to be tagged
+    input = @text
+    
+    #holds algorithmia object that processes data, with my API key
+    client = Algorithmia.client(ENV.fetch('ALGORITHMIA_KEY'))
+    
+    #specific algorithm to run
+    algo = client.algo('nlp/AutoTag/1.0.1')
+    
+    #final output of algorithm
+    result = algo.pipe(input).result
+
+    @tags = result
 
     # ================================================================================
     # Your code goes above.
